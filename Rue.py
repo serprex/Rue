@@ -1,12 +1,13 @@
+#!/usr/bin/python
 from re import compile as re
 from sys import argv
 from random import choice,seed;seed();del seed
-from itertools import izip as zip
 k=re(r"^::=.+",8).sub
 G={}
 try:
 	input=raw_input
 	range=xrange
+	from itertools import izip as zip
 except:pass
 def Rue(f,A="",s=0):
 	if f in G:f=G[f]
@@ -23,10 +24,10 @@ def Rue(f,A="",s=0):
 			a=f.find("\nimport ",a)+1
 		f=f.split("\n::=\n")
 		G[c]=f
-	c=""#::="
+	c=""
 	R=[]
 	for lf,C in zip(range(len(f)-1,-1,-1),f):
-		R+=([re(R[0],16).sub,R[1] if len(R) is 2 else "" if len(R) is 1 else R[1:],len(R) is 1] for R in (R.split("::=") for R in c.split("\n") if R))
+		R+=((re(R[0],16).sub,R[1] if len(R) is 2 else R[1:] or "",len(R) is 1) for R in (R.split("::=") for R in c.split("\n") if R))
 		while 1:
 			while 1:
 				c=C=C.replace("@@",A)
@@ -48,7 +49,7 @@ def Rue(f,A="",s=0):
 				if a is -1:break
 	return C
 def Smod(x):
-	print x
+	print(x)
 	return ""
 Smod={"print":Smod,"input":input,"argv":dict(((str(a),b) for a,b in enumerate(argv[2:]))).__getitem__}
 argv="_" if len(argv) is 1 else argv[1]

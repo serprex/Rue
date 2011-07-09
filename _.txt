@@ -1,4 +1,4 @@
-::=debug
+::=::=debug
 ::=Generally you don't want to have an infinity pump, so this is a comment
 ::=:print{:len{:fib{:len{:input{:reverse{>>srahcenin yrt}}}}}}
 :fib{16}
