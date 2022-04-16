@@ -1,12 +1,14 @@
 use std::borrow::Cow;
-use regex::Regex;
+use rand::thread_rng;
+use rand::seq::SliceRandom;
+use regex::{Regex, RegexSet};
 
 struct Rule {
     pattern: Regex,
     replace: String,
 }
 
-pub struct Rules(Vec<Rule>);
+pub struct Rules(RegexSet, Vec<Rule>);
 
 impl Rules {
     pub fn parse(s: &str) -> Result<Rules, regex::Error> {
@@ -24,22 +26,23 @@ impl Rules {
                 }
             }
         }
-        Ok(Rules(rules))
+        let set = RegexSet::new(rules.iter().map(|rule| rule.pattern.as_str()))?;
+        Ok(Rules(set, rules))
     }
 
     pub fn replace(&self, text: &mut String) -> bool {
-        let mut replaced = false;
-        for rule in self.0.iter() {
-            match rule.pattern.replace(&text, &rule.replace) {
-                Cow::Borrowed(_) => {
-                }
-                Cow::Owned(owned) => {
-                    *text = owned;
-                    replaced = true;
-                }
+        let matches = self.0.matches(&text);
+        if let Some(&idx) = matches.iter().collect::<Vec<_>>().choose(&mut thread_rng()) {
+            let rule = &self.1[idx];
+            if let Cow::Owned(replacement) = rule.pattern.replace_all(&text, &rule.replace) {
+                *text = replacement;
+                true
+            } else {
+                false
             }
+        } else {
+            false
         }
-        replaced
     }
 
     pub fn run(&self, text: &str) -> String {
