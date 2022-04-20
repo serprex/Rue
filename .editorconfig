@@ -1,0 +1,7 @@
+root = true
+
+[*.rs]
+charset = utf-8
+endof_line = lf
+indent_style = tab
+trim_trailing_whitespace = true
